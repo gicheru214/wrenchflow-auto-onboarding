@@ -202,9 +202,7 @@ export default function QuizFlow() {
         {step === "paywall" && (
           <PaywallScreen
             total={total}
-            contact={contact}
-            setContact={setContact}
-            errMsg={contactErr}
+            lead={lead}
             submitting={submitting}
             onUnlock={unlockScore}
             onBack={() => go(QUESTIONS.length - 1)}
@@ -216,8 +214,13 @@ export default function QuizFlow() {
             total={total}
             score={score}
             answers={answers}
+            lead={lead}
             connectSent={connectSent}
             onConnect={connectShop}
+            emailResults={emailResults}
+            onToggleEmail={setEmailResults}
+            emailSent={emailSent}
+            onSendEmail={sendResultsByEmail}
           />
         )}
       </main>
