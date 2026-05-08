@@ -672,6 +672,34 @@ function ScoreScreen({
             : "Connect my shop & build my plan →"}
         </button>
       </div>
+
+      <div className="rounded-2xl border border-line bg-card p-5">
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={emailResults}
+            onChange={(e) => onToggleEmail(e.target.checked)}
+            className="mt-1 h-5 w-5 rounded border-line bg-bg accent-blue cursor-pointer"
+          />
+          <div className="flex-1">
+            <div className="font-bold text-ink">
+              Email me my results
+            </div>
+            <div className="mt-0.5 text-sm text-sub">
+              {lead.email
+                ? `We'll send the full breakdown to ${lead.email}.`
+                : "We'll send the full breakdown to the email you used earlier."}
+            </div>
+          </div>
+        </label>
+        <button
+          onClick={onSendEmail}
+          disabled={!emailResults || emailSent}
+          className="mt-3 w-full rounded-xl border border-blue/40 bg-blue/10 px-4 py-3 text-sm font-bold text-blue hover:bg-blue/15 disabled:opacity-60"
+        >
+          {emailSent ? "✓ Sent — check your inbox" : "Send my results"}
+        </button>
+      </div>
     </div>
   );
 }
