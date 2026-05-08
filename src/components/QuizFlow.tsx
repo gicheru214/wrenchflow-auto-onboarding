@@ -7,8 +7,8 @@ import {
   totalRevenue,
 } from "../quiz/scoring";
 import {
-  emailValid,
   getSessionId,
+  getUpstreamLead,
   postSubmission,
   type Contact,
 } from "../lib/supabase";
