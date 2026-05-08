@@ -250,6 +250,8 @@ export default function QuizFlow() {
             onToggleEmail={setEmailResults}
             emailSent={emailSent}
             onSendEmail={sendResultsByEmail}
+            embed={embed}
+            onHandoff={handoffToParent}
           />
         )}
       </main>
