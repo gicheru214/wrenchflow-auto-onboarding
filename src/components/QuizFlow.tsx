@@ -685,56 +685,82 @@ function ScoreScreen({
         ))}
       </div>
 
-      <div className="rounded-2xl border border-gold/40 bg-gradient-to-b from-[#2b1d05] to-card p-5 sm:p-6">
-        <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">
-          Auto's 90-day plan
-        </div>
-        <h3 className="mt-1 text-xl sm:text-2xl font-extrabold">
-          Connect your shop and I'll start with the highest-ROI fix today.
-        </h3>
-        <p className="mt-2 text-sub text-sm">
-          Auto plugs into your existing shop management software (Tekmetric,
-          ShopWare, Mitchell1, AutoVitals). 10-minute setup. First wins inside
-          14 days.
-        </p>
-        <button
-          onClick={onConnect}
-          disabled={connectSent}
-          className="mt-5 w-full rounded-xl bg-gold px-5 py-4 text-base font-black text-[#1a1004] hover:bg-goldBright disabled:opacity-70"
-        >
-          {connectSent
-            ? "✓ Connect request sent"
-            : "Connect my shop & build my plan →"}
-        </button>
-      </div>
-
-      <div className="rounded-2xl border border-line bg-card p-5">
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={emailResults}
-            onChange={(e) => onToggleEmail(e.target.checked)}
-            className="mt-1 h-5 w-5 rounded border-line bg-bg accent-blue cursor-pointer"
-          />
-          <div className="flex-1">
-            <div className="font-bold text-ink">
-              Email me my results
-            </div>
-            <div className="mt-0.5 text-sm text-sub">
-              {lead.email
-                ? `We'll send the full breakdown to ${lead.email}.`
-                : "We'll send the full breakdown to the email you used earlier."}
-            </div>
+      {embed ? (
+        // Embed mode: parent popup owns the $1 conversion. Single
+        // big-fat-button hands the user back to the funnel chrome at the
+        // offer step. No connect/email surfaces here — the parent handles
+        // conversion next, and email is collected upstream.
+        <div className="rounded-3xl border border-gold/40 bg-gradient-to-b from-[#2b1d05] to-card p-5 sm:p-6 text-center">
+          <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">
+            Your fix
           </div>
-        </label>
-        <button
-          onClick={onSendEmail}
-          disabled={!emailResults || emailSent}
-          className="mt-3 w-full rounded-xl border border-blue/40 bg-blue/10 px-4 py-3 text-sm font-bold text-blue hover:bg-blue/15 disabled:opacity-60"
-        >
-          {emailSent ? "✓ Sent — check your inbox" : "Send my results"}
-        </button>
-      </div>
+          <h3 className="mt-1 text-xl sm:text-2xl font-extrabold">
+            Ready to recover this revenue?
+          </h3>
+          <p className="mt-2 text-sub text-sm">
+            I built the 90-day plan. One tap takes you back to claim it.
+          </p>
+          <button
+            onClick={onHandoff}
+            className="mt-5 w-full rounded-2xl bg-gold px-5 py-5 text-lg font-black text-[#1a1004] hover:bg-goldBright shadow-xl shadow-gold/20 active:scale-[0.98] transition-transform"
+          >
+            Show me how to fix this →
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="rounded-2xl border border-gold/40 bg-gradient-to-b from-[#2b1d05] to-card p-5 sm:p-6">
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">
+              Auto's 90-day plan
+            </div>
+            <h3 className="mt-1 text-xl sm:text-2xl font-extrabold">
+              Connect your shop and I'll start with the highest-ROI fix today.
+            </h3>
+            <p className="mt-2 text-sub text-sm">
+              Auto plugs into your existing shop management software (Tekmetric,
+              ShopWare, Mitchell1, AutoVitals). 10-minute setup. First wins inside
+              14 days.
+            </p>
+            <button
+              onClick={onConnect}
+              disabled={connectSent}
+              className="mt-5 w-full rounded-xl bg-gold px-5 py-4 text-base font-black text-[#1a1004] hover:bg-goldBright disabled:opacity-70"
+            >
+              {connectSent
+                ? "✓ Connect request sent"
+                : "Connect my shop & build my plan →"}
+            </button>
+          </div>
+
+          <div className="rounded-2xl border border-line bg-card p-5">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={emailResults}
+                onChange={(e) => onToggleEmail(e.target.checked)}
+                className="mt-1 h-5 w-5 rounded border-line bg-bg accent-blue cursor-pointer"
+              />
+              <div className="flex-1">
+                <div className="font-bold text-ink">
+                  Email me my results
+                </div>
+                <div className="mt-0.5 text-sm text-sub">
+                  {lead.email
+                    ? `We'll send the full breakdown to ${lead.email}.`
+                    : "We'll send the full breakdown to the email you used earlier."}
+                </div>
+              </div>
+            </label>
+            <button
+              onClick={onSendEmail}
+              disabled={!emailResults || emailSent}
+              className="mt-3 w-full rounded-xl border border-blue/40 bg-blue/10 px-4 py-3 text-sm font-bold text-blue hover:bg-blue/15 disabled:opacity-60"
+            >
+              {emailSent ? "✓ Sent — check your inbox" : "Send my results"}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
