@@ -585,6 +585,8 @@ function ScoreScreen({
   onToggleEmail,
   emailSent,
   onSendEmail,
+  embed,
+  onHandoff,
 }: {
   total: number;
   score: number;
@@ -596,6 +598,8 @@ function ScoreScreen({
   onToggleEmail: (v: boolean) => void;
   emailSent: boolean;
   onSendEmail: () => void;
+  embed: boolean;
+  onHandoff: () => void;
 }) {
   // Group answers into 3 buckets for the breakdown card.
   const buckets = useMemo(() => {
