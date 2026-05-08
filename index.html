@@ -886,7 +886,7 @@ function progressHtml() {
   return `
     <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
     <div class="progress-meta">
-      <span>Question ${Math.min(numericStep, 10) || 1} of 10</span>
+      <span>Question ${Math.min(numericStep, Q.length) || 1} of ${Q.length}</span>
       <span>${Math.round(pct)}%</span>
     </div>`;
 }
@@ -967,7 +967,7 @@ function questionHtml(idx, isDesktop) {
       ${moneyLineHtml()}
       ${autoBubble(q.autoIntro)}
       <div class="q-section-tag">${q.section}</div>
-      <div class="q-num">Question ${idx+1} of 10</div>
+      <div class="q-num">Question ${idx+1} of ${Q.length}</div>
       <div class="q-text">${q.text}</div>
       <div class="input-group">${pills}</div>
       ${revealHtml}
@@ -1167,7 +1167,7 @@ function renderStepbar() {
   if (!bar) return;
   const steps = [
     { id: 'intro', label: 'Intro', cls: '' },
-    ...Array.from({length:10}, (_,i) => ({ id: i, label: `Q${i+1}`, cls: '' })),
+    ...Array.from({length: Q.length}, (_,i) => ({ id: i, label: `Q${i+1}`, cls: '' })),
     { id: 'paywall', label: '🔒 Paywall', cls: 'paywall-chip' },
     { id: 'score', label: '★ Score reveal', cls: 'score-chip' }
   ];
