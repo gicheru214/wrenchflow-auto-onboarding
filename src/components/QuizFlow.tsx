@@ -22,7 +22,11 @@ import { burstFrom } from "./MoneyParticles";
 type Step = "intro" | number | "paywall" | "score";
 
 export default function QuizFlow() {
-  const [step, setStep] = useState<Step>("intro");
+  // Embed mode = audit is being hosted inside the upstream popup iframe.
+  // Skip the local intro screen and the built-in paywall; the parent funnel
+  // already showed an intro card and owns the $1 conversion that follows.
+  const embed = useMemo(() => isEmbedMode(), []);
+  const [step, setStep] = useState<Step>(embed ? 0 : "intro");
   const [answers, setAnswers] = useState<Record<number, AnswerRecord>>({});
   // Lead is captured upstream (popup → email gate). The quiz reads it; it never re-asks.
   const lead = useMemo<Contact>(() => getUpstreamLead(), []);
