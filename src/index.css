@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  background: #0b0d14;
+  color: #f3f5fa;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+/* Hide horizontal scrollbars on chip bar */
+.chip-scroll::-webkit-scrollbar { display: none; }
+.chip-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* Money particle keyframe — spawned from JS but driven via CSS animation */
+@keyframes wf-money-float {
+  0%   { transform: translate(var(--dx0,0), var(--dy0,0)) scale(0.6); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translate(var(--dx,0), var(--dy,-180px)) scale(1.2); opacity: 0; }
+}
+.wf-particle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 18px;
+  font-weight: 800;
+  color: #2eb888;
+  text-shadow: 0 0 8px rgba(46, 184, 136, 0.55);
+  animation: wf-money-float 1300ms ease-out forwards;
+  will-change: transform, opacity;
+  z-index: 9999;
+}
