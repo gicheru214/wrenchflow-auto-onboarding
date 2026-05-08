@@ -493,48 +493,33 @@ function PaywallScreen({
           <Bullet>Auto's personalized 90-day action plan</Bullet>
         </ul>
 
-        <div className="mt-5 grid gap-2">
-          <input
-            type="text"
-            placeholder="Your name"
-            autoComplete="name"
-            value={contact.name || ""}
-            onChange={(e) => setContact({ ...contact, name: e.target.value })}
-            className="w-full rounded-xl border border-line bg-bg px-4 py-3 text-[15px] text-ink outline-none focus:border-cyan focus:ring-2 focus:ring-cyan/30"
-          />
-          <input
-            type="email"
-            inputMode="email"
-            placeholder="Work email"
-            autoComplete="email"
-            value={contact.email || ""}
-            onChange={(e) => setContact({ ...contact, email: e.target.value })}
-            className="w-full rounded-xl border border-line bg-bg px-4 py-3 text-[15px] text-ink outline-none focus:border-cyan focus:ring-2 focus:ring-cyan/30"
-          />
-          <input
-            type="text"
-            placeholder="Shop name (optional)"
-            autoComplete="organization"
-            value={contact.shop || ""}
-            onChange={(e) => setContact({ ...contact, shop: e.target.value })}
-            className="w-full rounded-xl border border-line bg-bg px-4 py-3 text-[15px] text-ink outline-none focus:border-cyan focus:ring-2 focus:ring-cyan/30"
-          />
-          {errMsg && (
-            <div className="text-xs text-red-300" role="alert">
-              {errMsg}
+        {(lead.email || lead.name) && (
+          <div className="mt-5 flex items-center gap-3 rounded-xl border border-line bg-bg/50 px-4 py-3 text-sm">
+            <div className="grid h-8 w-8 place-items-center rounded-full bg-money/15 text-money">
+              ✓
             </div>
-          )}
-        </div>
+            <div className="min-w-0">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-sub">
+                We have your details
+              </div>
+              <div className="truncate text-ink">
+                {lead.name ? `${lead.name} · ` : ""}
+                {lead.email || "—"}
+                {lead.shop ? ` · ${lead.shop}` : ""}
+              </div>
+            </div>
+          </div>
+        )}
 
         <button
           onClick={onUnlock}
           disabled={submitting}
-          className="mt-4 w-full rounded-xl bg-gold px-5 py-4 text-base font-black text-[#1a1004] hover:bg-goldBright disabled:opacity-60"
+          className="mt-5 w-full rounded-xl bg-gold px-5 py-4 text-base font-black text-[#1a1004] hover:bg-goldBright disabled:opacity-60"
         >
-          {submitting ? "Unlocking…" : "Unlock my score — start free trial"}
+          {submitting ? "Unlocking…" : "Unlock my score →"}
         </button>
         <div className="mt-2 text-center text-[11px] text-sub">
-          No credit card required · 14-day trial · Cancel anytime
+          Instant — no credit card, no forms.
         </div>
       </div>
 
