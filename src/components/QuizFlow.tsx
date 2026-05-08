@@ -75,8 +75,32 @@ export default function QuizFlow() {
   }
 
   function next(qid: number) {
-    if (qid + 1 >= QUESTIONS.length) go("paywall");
-    else go(qid + 1);
+    if (qid + 1 >= QUESTIONS.length) {
+      // Embed mode skips the paywall — submit silently and reveal the score.
+      // The parent popup owns the $1 conversion that follows.
+      if (embed) void unlockScore();
+      else go("paywall");
+    } else {
+      go(qid + 1);
+    }
+  }
+
+  function handoffToParent() {
+    if (typeof window === "undefined") return;
+    try {
+      window.parent?.postMessage(
+        {
+          type: "wf-audit-done",
+          score,
+          revenue: total,
+          sessionId: getSessionId(),
+          email: lead.email ?? null,
+        },
+        "*",
+      );
+    } catch {
+      /* ignore — parent may have closed */
+    }
   }
 
   async function unlockScore() {
