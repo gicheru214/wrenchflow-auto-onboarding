@@ -3,6 +3,8 @@
 .env.local
 .env.*.local
 node_modules/
+dist/
+dist-ssr/
 .supabase/
 .vscode/
 .idea/
