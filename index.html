@@ -521,7 +521,7 @@
       <div class="brand-sub">General Auto · Shop Profit Diagnostic</div>
     </div>
   </div>
-  <div class="topctl-step">Step <b id="stepLabel">Intro</b> · <b id="stepCount">0 / 10</b></div>
+  <div class="topctl-step">Step <b id="stepLabel">Intro</b> · <b id="stepCount">0 / 18</b></div>
   <div class="view-toggle" id="viewToggle">
     <button data-view="split" class="active">Split</button>
     <button data-view="mobile">Mobile</button>
@@ -882,7 +882,7 @@ function moneyLineHtml() {
 
 function progressHtml() {
   const numericStep = (typeof state.step === 'number') ? state.step + 1 : (state.step === 'intro' ? 0 : 10);
-  const pct = (numericStep / 10) * 100;
+  const pct = (numericStep / Q.length) * 100;
   return `
     <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
     <div class="progress-meta">
@@ -1137,10 +1137,10 @@ function render() {
 
   const stepLabel = document.getElementById('stepLabel');
   const stepCount = document.getElementById('stepCount');
-  if (state.step === 'intro') { stepLabel.textContent = 'Intro'; stepCount.textContent = '0 / 10'; }
+  if (state.step === 'intro') { stepLabel.textContent = 'Intro'; stepCount.textContent = `0 / ${Q.length}`; }
   else if (state.step === 'paywall') { stepLabel.textContent = 'Paywall'; stepCount.textContent = `${Q.length} / ${Q.length}`; }
   else if (state.step === 'score') { stepLabel.textContent = 'Score reveal'; stepCount.textContent = '✓'; }
-  else { stepLabel.textContent = `Q${state.step+1}`; stepCount.textContent = `${state.step+1} / 10`; }
+  else { stepLabel.textContent = `Q${state.step+1}`; stepCount.textContent = `${state.step+1} / ${Q.length}`; }
 }
 
 function goTo(step) {
