@@ -547,14 +547,24 @@ function ScoreScreen({
   total,
   score,
   answers,
+  lead,
   connectSent,
   onConnect,
+  emailResults,
+  onToggleEmail,
+  emailSent,
+  onSendEmail,
 }: {
   total: number;
   score: number;
   answers: Record<number, AnswerRecord>;
+  lead: Contact;
   connectSent: boolean;
   onConnect: () => void;
+  emailResults: boolean;
+  onToggleEmail: (v: boolean) => void;
+  emailSent: boolean;
+  onSendEmail: () => void;
 }) {
   // Group answers into 3 buckets for the breakdown card.
   const buckets = useMemo(() => {
