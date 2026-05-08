@@ -23,8 +23,24 @@ export function getUpstreamLead(): {
   email?: string;
   shop?: string;
 } {
-  if (typeof window !== "undefined" && window.WRENCHFLOW_AUTO_LEAD) {
-    return window.WRENCHFLOW_AUTO_LEAD;
+  // 1. URL params win — that's how the parent funnel hands off across origins
+  //    (popup at wrenchflow.com → iframe at audit.subdomain). localStorage
+  //    is per-origin so it can't carry the lead across, but query string can.
+  if (typeof window !== "undefined") {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const fromUrl: { name?: string; email?: string; shop?: string } = {};
+      const n = p.get("name");
+      const e = p.get("email");
+      const s = p.get("shop");
+      if (n) fromUrl.name = n;
+      if (e) fromUrl.email = e;
+      if (s) fromUrl.shop = s;
+      if (fromUrl.name || fromUrl.email || fromUrl.shop) return fromUrl;
+    } catch {
+      /* ignore */
+    }
+    if (window.WRENCHFLOW_AUTO_LEAD) return window.WRENCHFLOW_AUTO_LEAD;
   }
   try {
     const raw = localStorage.getItem(LEAD_KEY);
@@ -33,6 +49,21 @@ export function getUpstreamLead(): {
     /* ignore */
   }
   return {};
+}
+
+/**
+ * Embed mode flag — the audit is hosted standalone, but when iframed by
+ * the upstream funnel popup we drop the intro screen, skip the built-in
+ * paywall (parent owns the $1 conversion), and replace the score-reveal
+ * CTAs with a single "Show me how to fix this" handoff button.
+ */
+export function isEmbedMode(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return new URLSearchParams(window.location.search).get("embed") === "1";
+  } catch {
+    return false;
+  }
 }
 
 export function persistUpstreamLead(lead: {
