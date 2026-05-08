@@ -151,9 +151,9 @@ export default function QuizFlow() {
       sessionId: getSessionId(),
       intent: "connect",
       contact: {
-        name: contact.name?.trim(),
-        email: contact.email?.trim(),
-        shop: contact.shop?.trim(),
+        name: lead.name?.trim(),
+        email: lead.email?.trim(),
+        shop: lead.shop?.trim(),
       },
       answers: Object.values(answers).map((a) => {
         const q = QUESTIONS[a.qid];
