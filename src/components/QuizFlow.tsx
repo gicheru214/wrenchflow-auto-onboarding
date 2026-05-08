@@ -9,6 +9,7 @@ import {
 import {
   getSessionId,
   getUpstreamLead,
+  isEmbedMode,
   postSubmission,
   type Contact,
 } from "../lib/supabase";
