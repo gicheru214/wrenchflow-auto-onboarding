@@ -75,21 +75,14 @@ export default function QuizFlow() {
   }
 
   async function unlockScore() {
-    const email = (contact.email || "").trim();
-    if (!emailValid(email)) {
-      setContactErr("Add a valid email so Auto can send your plan.");
-      setToast({ msg: "Email required", kind: "err" });
-      return;
-    }
-    setContactErr("");
     setSubmitting(true);
     const payload = {
       sessionId: getSessionId(),
       intent: "submit" as const,
       contact: {
-        name: contact.name?.trim(),
-        email,
-        shop: contact.shop?.trim(),
+        name: lead.name?.trim(),
+        email: lead.email?.trim(),
+        shop: lead.shop?.trim(),
       },
       answers: Object.values(answers).map((a) => {
         const q = QUESTIONS[a.qid];
@@ -111,9 +104,43 @@ export default function QuizFlow() {
     go("score");
     setToast({
       msg: result.ok
-        ? `Saved. Welcome, ${contact.name || "shop owner"}.`
+        ? `Saved. Welcome${lead.name ? `, ${lead.name}` : ""}.`
         : "Saved locally — we'll sync when back online.",
       kind: result.ok ? "ok" : "err",
+    });
+  }
+
+  async function sendResultsByEmail() {
+    if (emailSent) return;
+    setEmailSent(true);
+    await postSubmission({
+      sessionId: getSessionId(),
+      intent: "email_results" as unknown as "submit",
+      contact: {
+        name: lead.name?.trim(),
+        email: lead.email?.trim(),
+        shop: lead.shop?.trim(),
+      },
+      answers: Object.values(answers).map((a) => {
+        const q = QUESTIONS[a.qid];
+        return {
+          qid: a.qid,
+          section: q.section,
+          label: q.opts[a.optIdx],
+          revBump: bumpFor(q, a.optIdx),
+        };
+      }),
+      revenue: total,
+      score,
+      durationMs: Date.now() - startedAt.current,
+      userAgent:
+        typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
+    });
+    setToast({
+      msg: lead.email
+        ? `Sent to ${lead.email}.`
+        : "We'll email your results shortly.",
+      kind: "ok",
     });
   }
 
