@@ -434,17 +434,13 @@ function ProgressBar({ value, qid }: { value: number; qid: number }) {
 // ---------- Paywall ----------
 function PaywallScreen({
   total,
-  contact,
-  setContact,
-  errMsg,
+  lead,
   submitting,
   onUnlock,
   onBack,
 }: {
   total: number;
-  contact: Contact;
-  setContact: (c: Contact) => void;
-  errMsg: string;
+  lead: Contact;
   submitting: boolean;
   onUnlock: () => void;
   onBack: () => void;
