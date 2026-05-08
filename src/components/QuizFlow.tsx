@@ -23,10 +23,12 @@ type Step = "intro" | number | "paywall" | "score";
 export default function QuizFlow() {
   const [step, setStep] = useState<Step>("intro");
   const [answers, setAnswers] = useState<Record<number, AnswerRecord>>({});
-  const [contact, setContact] = useState<Contact>({});
-  const [contactErr, setContactErr] = useState<string>("");
+  // Lead is captured upstream (popup → email gate). The quiz reads it; it never re-asks.
+  const lead = useMemo<Contact>(() => getUpstreamLead(), []);
   const [submitting, setSubmitting] = useState(false);
   const [connectSent, setConnectSent] = useState(false);
+  const [emailResults, setEmailResults] = useState(true);
+  const [emailSent, setEmailSent] = useState(false);
   const [toast, setToast] = useState<{ msg: string; kind: ToastKind } | null>(
     null,
   );
