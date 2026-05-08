@@ -6,6 +6,44 @@ declare global {
   interface Window {
     WRENCHFLOW_AUTO_API?: string;
     WRENCHFLOW_AUTO_ANON_KEY?: string;
+    /** Set by the upstream funnel page that already captured the lead's email. */
+    WRENCHFLOW_AUTO_LEAD?: { name?: string; email?: string; shop?: string };
+  }
+}
+
+const LEAD_KEY = "wrenchflow.auto.lead";
+
+/**
+ * Returns the lead/contact captured upstream in the funnel (popup → 4Q → email gate
+ * → quiz). Falls back to a window global, then localStorage, so the quiz can read it
+ * regardless of whether the host page injects it on load or stashes it after capture.
+ */
+export function getUpstreamLead(): {
+  name?: string;
+  email?: string;
+  shop?: string;
+} {
+  if (typeof window !== "undefined" && window.WRENCHFLOW_AUTO_LEAD) {
+    return window.WRENCHFLOW_AUTO_LEAD;
+  }
+  try {
+    const raw = localStorage.getItem(LEAD_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {
+    /* ignore */
+  }
+  return {};
+}
+
+export function persistUpstreamLead(lead: {
+  name?: string;
+  email?: string;
+  shop?: string;
+}) {
+  try {
+    localStorage.setItem(LEAD_KEY, JSON.stringify(lead));
+  } catch {
+    /* ignore */
   }
 }
 
