@@ -7,6 +7,7 @@ import {
   totalRevenue,
 } from "../quiz/scoring";
 import {
+  getReturnUrl,
   getSessionId,
   getUpstreamLead,
   isEmbedMode,
