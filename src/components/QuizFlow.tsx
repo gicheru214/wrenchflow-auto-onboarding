@@ -53,17 +53,21 @@ export default function QuizFlow() {
       ? "Intro"
       : step === "paywall"
         ? "Paywall"
-        : step === "score"
-          ? "Score reveal"
-          : `Q${(step as number) + 1}`;
+        : step === "calculating"
+          ? "Calculating"
+          : step === "score"
+            ? "Score reveal"
+            : `Q${(step as number) + 1}`;
   const stepCount =
     step === "intro"
       ? `0 / ${QUESTIONS.length}`
       : step === "paywall"
         ? `${QUESTIONS.length} / ${QUESTIONS.length}`
-        : step === "score"
-          ? "✓"
-          : `${(step as number) + 1} / ${QUESTIONS.length}`;
+        : step === "calculating"
+          ? "…"
+          : step === "score"
+            ? "✓"
+            : `${(step as number) + 1} / ${QUESTIONS.length}`;
 
   function go(next: Step) {
     setStep(next);
