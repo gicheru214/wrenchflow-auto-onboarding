@@ -977,8 +977,8 @@ function Interstitial({
   const copy =
     qid === 3
       ? {
-          tag: "Halfway moment",
-          title: "Take a breath. You're 4 in.",
+          tag: "Quick reset",
+          title: "Through 3 — 15 to go.",
           body: (
             <>
               I'm already seeing the shape of your shop's leak — and you've
