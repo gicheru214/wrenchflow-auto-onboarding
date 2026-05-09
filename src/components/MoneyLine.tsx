@@ -35,21 +35,26 @@ export default function MoneyLine({ total }: Props) {
     setDelta({ amount: change, nonce: Date.now() });
     deltaTimerRef.current = window.setTimeout(() => setDelta(null), 1400);
 
+    // setInterval-based count-up. RAF was being canceled by StrictMode's
+    // double-invocation cleanup before the first frame ever fired.
     const t0 = performance.now();
     const dur = 900;
-    const tick = (t: number) => {
-      const k = Math.min(1, (t - t0) / dur);
+    let stepHandle: number | null = null;
+    const advance = () => {
+      const k = Math.min(1, (performance.now() - t0) / dur);
       const eased = 1 - Math.pow(1 - k, 3);
       const next = Math.round(start + change * eased);
-      console.log("[MoneyLine] tick k=", k.toFixed(2), "next=", next);
       setDisplay(next);
-      if (k < 1) rafRef.current = requestAnimationFrame(tick);
-      else rafRef.current = null;
+      if (k >= 1 && stepHandle !== null) {
+        window.clearInterval(stepHandle);
+        stepHandle = null;
+      }
     };
-    rafRef.current = requestAnimationFrame(tick);
+    stepHandle = window.setInterval(advance, 16);
+    rafRef.current = stepHandle;
 
     return () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current !== null) window.clearInterval(rafRef.current);
       if (deltaTimerRef.current !== null)
         window.clearTimeout(deltaTimerRef.current);
     };
