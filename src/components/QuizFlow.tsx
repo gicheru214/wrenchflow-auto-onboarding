@@ -147,6 +147,18 @@ export default function QuizFlow() {
       [qid]: { qid, optIdx, revealed: true },
     }));
     burstFrom(btn, 16);
+    const q = QUESTIONS[qid];
+    const bump = bumpFor(q, optIdx);
+    trackFunnel("funnel_audit_question_answered", {
+      session_id: getSessionId(),
+      qid,
+      q_number: qid + 1,
+      section: q.section,
+      opt_idx: optIdx,
+      opt_label: q.opts[optIdx],
+      rev_bump: bump,
+      running_total: total + bump,
+    });
   }
 
   function next(qid: number) {
