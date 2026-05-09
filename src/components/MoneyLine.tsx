@@ -11,37 +11,50 @@ const BAR_FULL = 120000;
 
 export default function MoneyLine({ total }: Props) {
   const [display, setDisplay] = useState(0);
-  const [delta, setDelta] = useState(0);
-  const prev = useRef(0);
+  const [delta, setDelta] = useState<{ amount: number; nonce: number } | null>(
+    null,
+  );
+  const rafRef = useRef<number | null>(null);
+  const deltaTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    let raf = 0;
-    const start = display;
-    const change = total - start;
-    if (change === 0) return;
-    if (change > 0) {
-      setDelta(change);
-      // Clear the flash after the animation runs.
-      const cleanup = setTimeout(() => setDelta(0), 1400);
-      const t0 = performance.now();
-      const dur = 900;
-      const tick = (t: number) => {
-        const k = Math.min(1, (t - t0) / dur);
-        const eased = 1 - Math.pow(1 - k, 3);
-        setDisplay(Math.round(start + change * eased));
-        if (k < 1) raf = requestAnimationFrame(tick);
-      };
-      raf = requestAnimationFrame(tick);
-      prev.current = total;
-      return () => {
-        cancelAnimationFrame(raf);
-        clearTimeout(cleanup);
-      };
-    } else {
-      // Going down (back nav) — snap, no animation flash.
-      setDisplay(total);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Cancel any in-flight animation; the new target supersedes it.
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    if (deltaTimerRef.current !== null)
+      window.clearTimeout(deltaTimerRef.current);
+
+    setDisplay((current) => {
+      const change = total - current;
+      if (change > 0) {
+        // Fire the green delta flash (keyed on nonce so each pick
+        // restarts the animation even if amount repeats).
+        setDelta({ amount: change, nonce: Date.now() });
+        deltaTimerRef.current = window.setTimeout(
+          () => setDelta(null),
+          1400,
+        );
+        const start = current;
+        const t0 = performance.now();
+        const dur = 900;
+        const tick = (t: number) => {
+          const k = Math.min(1, (t - t0) / dur);
+          const eased = 1 - Math.pow(1 - k, 3);
+          setDisplay(Math.round(start + change * eased));
+          if (k < 1) rafRef.current = requestAnimationFrame(tick);
+          else rafRef.current = null;
+        };
+        rafRef.current = requestAnimationFrame(tick);
+        return current; // start at current; tick will advance it
+      }
+      // Going down (back-nav) or no change: snap.
+      return total;
+    });
+
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      if (deltaTimerRef.current !== null)
+        window.clearTimeout(deltaTimerRef.current);
+    };
   }, [total]);
 
   return (
@@ -51,12 +64,12 @@ export default function MoneyLine({ total }: Props) {
           Money Line · Live
         </div>
         <div className="flex items-baseline gap-2">
-          {delta > 0 && (
+          {delta && delta.amount > 0 && (
             <span
-              key={`d-${prev.current}-${delta}`}
+              key={delta.nonce}
               className="text-xs font-extrabold text-money tabular-nums money-delta-pop"
             >
-              +${delta.toLocaleString()}
+              +${delta.amount.toLocaleString()}
             </span>
           )}
           <div className="text-2xl sm:text-3xl font-black text-money tabular-nums">
