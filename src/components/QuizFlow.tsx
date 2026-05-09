@@ -14,6 +14,7 @@ import {
   postSubmission,
   type Contact,
 } from "../lib/supabase";
+import { identifyAuditUser, trackFunnel } from "../lib/tracking";
 import AutoBubble from "./AutoBubble";
 import MoneyLine from "./MoneyLine";
 import Topbar from "./Topbar";
