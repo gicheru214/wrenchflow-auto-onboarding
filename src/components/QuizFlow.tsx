@@ -335,19 +335,13 @@ function IntroScreen({
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-sub">
           {qCount} questions. ~3 minutes. Auto walks you through the same
-          diagnostic the top 1% of independent shops use to find $50K–$300K of
-          recoverable revenue every year.
+          diagnostic independent shop owners use to find{" "}
+          <strong className="text-money">$30K–$80K</strong> of recoverable
+          revenue every year.
         </p>
       </div>
 
-      <AutoBubble>
-        <p>
-          I'm <strong className="text-blue">Auto</strong> — your WrenchFlow
-          co-pilot. I'll ask you {qCount} short questions, then show you the
-          exact dollar number we can recover together. No fluff. No spreadsheets
-          to fill in.
-        </p>
-      </AutoBubble>
+      <ColdOpenDemo />
 
       <button
         onClick={onStart}
@@ -355,6 +349,116 @@ function IntroScreen({
       >
         Start the diagnostic →
       </button>
+      <div className="text-center text-[11px] uppercase tracking-[0.18em] text-sub">
+        No signup · No card · Result in 3 min
+      </div>
+    </div>
+  );
+}
+
+// 6-second looping cold-open: shows a fake question being answered,
+// money line ticking up, and Auto's bubble landing — gives the user a
+// preview of the quiz feel before they commit to starting.
+function ColdOpenDemo() {
+  const beats = [
+    {
+      section: "Throughput",
+      q: "How often is a bay sitting empty?",
+      pick: "A few hours adds up",
+      bubble: "That's bay-hours bleeding $115/hr in pure capacity.",
+      delta: 7000,
+      total: 7000,
+    },
+    {
+      section: "Lead Capture",
+      q: "Calls after 7pm?",
+      pick: "Voicemail — I call back tomorrow",
+      bubble: "After-hours intent is the #1 leak I see.",
+      delta: 14000,
+      total: 21000,
+    },
+    {
+      section: "Recurring Revenue",
+      q: "Tracking next-due services?",
+      pick: "Stickers + hope",
+      bubble: "Each missed interval = $295 walking down the road.",
+      delta: 10000,
+      total: 31000,
+    },
+  ];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx((i) => (i + 1) % beats.length), 2200);
+    return () => clearInterval(t);
+  }, [beats.length]);
+  const beat = beats[idx];
+
+  return (
+    <div className="rounded-3xl border border-blue/30 bg-gradient-to-b from-[#0c1a2c] to-card p-4 sm:p-5 shadow-xl shadow-blue/10">
+      <div className="flex items-center justify-between">
+        <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-blue">
+          Live preview · how Auto runs
+        </div>
+        <div className="flex gap-1">
+          {beats.map((_, i) => (
+            <span
+              key={i}
+              className={`h-1 w-4 rounded-full transition-colors ${
+                i === idx ? "bg-blue" : "bg-line"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div key={`mini-${idx}`} className="mt-3 wf-cold-fade">
+        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
+          {beat.section}
+        </div>
+        <div className="mt-0.5 text-sm sm:text-base font-extrabold text-ink leading-snug">
+          {beat.q}
+        </div>
+        <div className="mt-2 flex items-center gap-2 rounded-lg border border-blue bg-blue/10 px-3 py-2 text-[12.5px] font-semibold text-ink">
+          <span className="grid h-3.5 w-3.5 place-items-center rounded-full border-2 border-blue bg-blue">
+            <span className="h-1 w-1 rounded-full bg-bg" />
+          </span>
+          <span className="flex-1">{beat.pick}</span>
+        </div>
+        <div className="mt-2 flex items-baseline justify-between gap-3 rounded-lg border border-money/30 bg-money/5 px-3 py-2">
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-money/80">
+            Money Line
+          </span>
+          <span className="flex items-baseline gap-2">
+            <span className="text-xs font-extrabold text-money tabular-nums wf-cold-delta">
+              +${beat.delta.toLocaleString()}
+            </span>
+            <span className="text-lg font-black text-money tabular-nums">
+              ${beat.total.toLocaleString()}
+            </span>
+          </span>
+        </div>
+        <div className="mt-2 rounded-lg border border-line bg-card/60 px-3 py-2 text-[12px] text-sub">
+          <span className="font-bold text-blue">Auto:</span> {beat.bubble}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes wf-cold-fade-kf {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes wf-cold-delta-kf {
+          0%   { opacity: 0; transform: translateY(4px) scale(0.9); }
+          25%  { opacity: 1; transform: translateY(-1px) scale(1.1); }
+          80%  { opacity: 1; transform: translateY(-1px) scale(1); }
+          100% { opacity: 0; transform: translateY(-6px) scale(0.95); }
+        }
+        .wf-cold-fade { animation: wf-cold-fade-kf 420ms ease-out both; }
+        .wf-cold-delta {
+          animation: wf-cold-delta-kf 1.6s ease-out both;
+          text-shadow: 0 0 10px rgba(74, 222, 128, 0.55);
+        }
+      `}</style>
     </div>
   );
 }
