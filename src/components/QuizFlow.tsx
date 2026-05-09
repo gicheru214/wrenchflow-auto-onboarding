@@ -51,6 +51,68 @@ export default function QuizFlow() {
   const total = useMemo(() => totalRevenue(QUESTIONS, answers), [answers]);
   const score = useMemo(() => shopProfitScore(QUESTIONS, answers), [answers]);
 
+  // Identify the user to Mixpanel/PostHog as soon as the audit boots
+  // — the upstream funnel already captured the email, so the audit
+  // events should land on the same person profile, not anonymous ids.
+  useEffect(() => {
+    if (lead.email) {
+      identifyAuditUser(lead.email, {
+        name: lead.name,
+        shop: lead.shop,
+        audit_session_id: getSessionId(),
+        audit_embed_mode: embed,
+      });
+    }
+    trackFunnel("funnel_audit_loaded", {
+      embed_mode: embed,
+      session_id: getSessionId(),
+      has_lead: Boolean(lead.email),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Step transitions — fire one event per screen the user lands on.
+  useEffect(() => {
+    const sid = getSessionId();
+    if (step === "intro") {
+      trackFunnel("funnel_audit_intro_shown", { session_id: sid });
+    } else if (step === "paywall") {
+      trackFunnel("funnel_audit_paywall_shown", {
+        session_id: sid,
+        revenue: total,
+      });
+    } else if (step === "calculating") {
+      trackFunnel("funnel_audit_calculating_shown", {
+        session_id: sid,
+        revenue: total,
+        score,
+      });
+    } else if (step === "score") {
+      trackFunnel("funnel_audit_score_revealed", {
+        session_id: sid,
+        revenue: total,
+        score,
+      });
+    } else if (typeof step === "number") {
+      const q = QUESTIONS[step];
+      const isInterstitial =
+        INTERSTITIAL_BEFORE.has(step) && !seenBreaks.has(step);
+      trackFunnel(
+        isInterstitial
+          ? "funnel_audit_interstitial_shown"
+          : "funnel_audit_question_shown",
+        {
+          session_id: sid,
+          qid: step,
+          q_number: step + 1,
+          section: q.section,
+          revenue: total,
+        },
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, seenBreaks]);
+
   const stepLabel =
     step === "intro"
       ? "Intro"
