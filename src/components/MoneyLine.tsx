@@ -40,7 +40,9 @@ export default function MoneyLine({ total }: Props) {
     const tick = (t: number) => {
       const k = Math.min(1, (t - t0) / dur);
       const eased = 1 - Math.pow(1 - k, 3);
-      setDisplay(Math.round(start + change * eased));
+      const next = Math.round(start + change * eased);
+      console.log("[MoneyLine] tick k=", k.toFixed(2), "next=", next);
+      setDisplay(next);
       if (k < 1) rafRef.current = requestAnimationFrame(tick);
       else rafRef.current = null;
     };
