@@ -249,17 +249,13 @@ export default function QuizFlow() {
         )}
 
         {typeof step === "number" &&
-          (INTERSTITIAL_BEFORE.has(step) && !answers[step]?.revealed ? (
+          (INTERSTITIAL_BEFORE.has(step) && !seenBreaks.has(step) ? (
             <Interstitial
               qid={step}
               total={total}
-              onContinue={() => {
-                // Mark the interstitial as "seen" by recording a noop pick
-                // — actually no, simpler: we use a separate seen set.
-                seenInterstitial.current.add(step);
-                // Force re-render through state (cheaper than a separate set hook).
-                setInterstitialBump((n) => n + 1);
-              }}
+              onContinue={() =>
+                setSeenBreaks((s) => new Set(s).add(step as number))
+              }
             />
           ) : (
             <QuestionScreen
