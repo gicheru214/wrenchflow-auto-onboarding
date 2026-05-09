@@ -297,6 +297,11 @@ export default function QuizFlow() {
   async function connectShop() {
     if (connectSent) return;
     setConnectSent(true);
+    trackFunnel("funnel_audit_connect_clicked", {
+      session_id: getSessionId(),
+      revenue: total,
+      score,
+    });
     await postSubmission({
       sessionId: getSessionId(),
       intent: "connect",
