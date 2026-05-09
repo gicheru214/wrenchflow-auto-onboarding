@@ -156,7 +156,13 @@ export default function QuizFlow() {
       userAgent:
         typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
     };
-    const result = await postSubmission(payload);
+    // Drop into the "Calculating your hidden money map" screen first —
+    // gives the network call cover and lets the score reveal land hard.
+    go("calculating");
+    const [result] = await Promise.all([
+      postSubmission(payload),
+      new Promise((r) => setTimeout(r, 2500)),
+    ]);
     setSubmitting(false);
     go("score");
     setToast({
