@@ -421,7 +421,10 @@ function QuestionScreen({
 
 function Reveal({ q }: { q: { avg: string; hit: string; goal: string } }) {
   return (
-    <div className="grid gap-3 rounded-2xl border border-line bg-card/60 p-4 animate-rise">
+    <div
+      data-reveal="1"
+      className="grid gap-2 rounded-xl border border-line bg-card/60 px-3 py-2.5 animate-rise"
+    >
       <Row label="Industry avg">
         <span dangerouslySetInnerHTML={{ __html: q.avg }} />
       </Row>
@@ -451,15 +454,15 @@ function Row({
         ? "bg-money"
         : "bg-sub";
   return (
-    <div className="flex gap-3 text-sm">
-      <div className="shrink-0 pt-1.5">
-        <span className={`block h-2 w-2 rounded-full ${dot}`} />
+    <div className="flex gap-2.5 text-[12.5px]">
+      <div className="shrink-0 pt-1">
+        <span className={`block h-1.5 w-1.5 rounded-full ${dot}`} />
       </div>
       <div className="min-w-0">
-        <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-sub">
+        <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-sub">
           {label}
         </div>
-        <div className="mt-0.5 text-ink leading-snug">{children}</div>
+        <div className="text-ink leading-snug">{children}</div>
       </div>
     </div>
   );
