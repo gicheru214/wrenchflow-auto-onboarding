@@ -349,6 +349,21 @@ function QuestionScreen({
 }) {
   const q = QUESTIONS[qid];
   const revealed = !!answer?.revealed;
+  const revealRef = useRef<HTMLDivElement | null>(null);
+
+  // After a pick, scroll the Reveal panel into view so the educational
+  // content (Industry avg / Revenue hit / Auto's plan) is what the user
+  // sees next — not the option list above. The sticky CTA bar keeps
+  // Next visible regardless.
+  useEffect(() => {
+    if (!revealed) return;
+    const el = revealRef.current;
+    if (!el) return;
+    const t = setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 80);
+    return () => clearTimeout(t);
+  }, [revealed]);
 
   return (
     <div className="space-y-3 animate-rise pb-24">
