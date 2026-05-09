@@ -248,19 +248,34 @@ export default function QuizFlow() {
           />
         )}
 
-        {typeof step === "number" && (
-          <QuestionScreen
-            key={step}
-            qid={step}
-            answer={answers[step]}
-            total={total}
-            onPick={handleChoice}
-            onNext={() => next(step as number)}
-            onBack={
-              (step as number) > 0 ? () => go((step as number) - 1) : undefined
-            }
-          />
-        )}
+        {typeof step === "number" &&
+          (INTERSTITIAL_BEFORE.has(step) && !answers[step]?.revealed ? (
+            <Interstitial
+              qid={step}
+              total={total}
+              onContinue={() => {
+                // Mark the interstitial as "seen" by recording a noop pick
+                // — actually no, simpler: we use a separate seen set.
+                seenInterstitial.current.add(step);
+                // Force re-render through state (cheaper than a separate set hook).
+                setInterstitialBump((n) => n + 1);
+              }}
+            />
+          ) : (
+            <QuestionScreen
+              key={step}
+              qid={step}
+              answer={answers[step]}
+              total={total}
+              onPick={handleChoice}
+              onNext={() => next(step as number)}
+              onBack={
+                (step as number) > 0 ? () => go((step as number) - 1) : undefined
+              }
+            />
+          ))}
+
+        {step === "calculating" && <CalculatingScreen />}
 
         {step === "paywall" && (
           <PaywallScreen
