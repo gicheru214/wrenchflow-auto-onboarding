@@ -23,7 +23,7 @@ export default function Topbar({ stepLabel, stepCount }: Props) {
               </span>
             </div>
             <div className="truncate text-[11px] uppercase tracking-[0.18em] text-sub">
-              Shop Profit Diagnostic
+              Shop Hidden Money Finder
             </div>
           </div>
         </div>
