@@ -414,14 +414,15 @@ function QuestionScreen({
               <button
                 key={i}
                 onClick={(e) => onPick(qid, i, e.currentTarget)}
-                className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left text-[13px] font-semibold transition active:scale-[0.99] ${
+                style={{ animationDelay: `${i * 60}ms` }}
+                className={`wf-opt flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left text-[13px] font-semibold transition-[transform,background,border] duration-150 active:scale-[0.97] hover:scale-[1.005] ${
                   picked
-                    ? "border-blue bg-blue/10 text-ink"
+                    ? "border-blue bg-blue/10 text-ink ring-2 ring-blue/30"
                     : "border-line bg-card hover:border-blue/40 hover:bg-card/70 text-ink"
                 }`}
               >
                 <span
-                  className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 ${
+                  className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 transition-colors ${
                     picked ? "border-blue bg-blue" : "border-line"
                   }`}
                 >
@@ -432,6 +433,15 @@ function QuestionScreen({
             );
           })}
         </div>
+        <style>{`
+          @keyframes wf-opt-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+          .wf-opt {
+            animation: wf-opt-in 360ms ease-out both;
+          }
+        `}</style>
       </section>
 
       {revealed && (
