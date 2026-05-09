@@ -14,42 +14,37 @@ export default function MoneyLine({ total }: Props) {
   const [delta, setDelta] = useState<{ amount: number; nonce: number } | null>(
     null,
   );
+  const displayRef = useRef(0);
+  displayRef.current = display;
   const rafRef = useRef<number | null>(null);
   const deltaTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    console.log("[MoneyLine] effect total=", total);
-    // Cancel any in-flight animation; the new target supersedes it.
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     if (deltaTimerRef.current !== null)
       window.clearTimeout(deltaTimerRef.current);
 
-    setDisplay((current) => {
-      const change = total - current;
-      if (change > 0) {
-        // Fire the green delta flash (keyed on nonce so each pick
-        // restarts the animation even if amount repeats).
-        setDelta({ amount: change, nonce: Date.now() });
-        deltaTimerRef.current = window.setTimeout(
-          () => setDelta(null),
-          1400,
-        );
-        const start = current;
-        const t0 = performance.now();
-        const dur = 900;
-        const tick = (t: number) => {
-          const k = Math.min(1, (t - t0) / dur);
-          const eased = 1 - Math.pow(1 - k, 3);
-          setDisplay(Math.round(start + change * eased));
-          if (k < 1) rafRef.current = requestAnimationFrame(tick);
-          else rafRef.current = null;
-        };
-        rafRef.current = requestAnimationFrame(tick);
-        return current; // start at current; tick will advance it
-      }
-      // Going down (back-nav) or no change: snap.
-      return total;
-    });
+    const start = displayRef.current;
+    const change = total - start;
+    if (change === 0) return;
+    if (change < 0) {
+      setDisplay(total);
+      return;
+    }
+
+    setDelta({ amount: change, nonce: Date.now() });
+    deltaTimerRef.current = window.setTimeout(() => setDelta(null), 1400);
+
+    const t0 = performance.now();
+    const dur = 900;
+    const tick = (t: number) => {
+      const k = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - k, 3);
+      setDisplay(Math.round(start + change * eased));
+      if (k < 1) rafRef.current = requestAnimationFrame(tick);
+      else rafRef.current = null;
+    };
+    rafRef.current = requestAnimationFrame(tick);
 
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
