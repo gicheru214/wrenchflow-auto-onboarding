@@ -533,7 +533,7 @@ function PaywallScreen({
           Diagnostic complete · {QUESTIONS.length} / {QUESTIONS.length}
         </div>
         <h2 className="mt-1 text-2xl sm:text-3xl font-black leading-tight">
-          Your Shop Profit Score is ready.
+          Your Hidden Money Score is ready.
           <br />
           <span className="text-sub font-bold text-lg sm:text-xl">
             Unlock it to see exactly where the money is hiding.
@@ -562,7 +562,7 @@ function PaywallScreen({
         </div>
 
         <ul className="mt-5 space-y-2 text-sm">
-          <Bullet>Your full Shop Profit Score (X / 100)</Bullet>
+          <Bullet>Your full Hidden Money Score (X / 100)</Bullet>
           <Bullet>Total projected extra revenue — 12-month range</Bullet>
           <Bullet>Breakdown by Retention, Throughput, and Lead capture</Bullet>
           <Bullet>Auto's personalized 90-day action plan</Bullet>
@@ -691,7 +691,7 @@ function ScoreScreen({
 
       <div className="rounded-3xl bg-auto-grad p-6 sm:p-8 text-center shadow-2xl shadow-blue/30">
         <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/85">
-          Shop Profit Score
+          Hidden Money Score
         </div>
         <div className="mt-2 flex items-end justify-center gap-1 text-white">
           <span className="text-7xl sm:text-8xl font-black leading-none tabular-nums">
