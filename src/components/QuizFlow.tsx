@@ -345,9 +345,15 @@ export default function QuizFlow() {
             <Interstitial
               qid={step}
               total={total}
-              onContinue={() =>
-                setSeenBreaks((s) => new Set(s).add(step as number))
-              }
+              onContinue={() => {
+                trackFunnel("funnel_audit_interstitial_dismissed", {
+                  session_id: getSessionId(),
+                  qid: step,
+                  q_number: (step as number) + 1,
+                  revenue: total,
+                });
+                setSeenBreaks((s) => new Set(s).add(step as number));
+              }}
             />
           ) : (
             <QuestionScreen
