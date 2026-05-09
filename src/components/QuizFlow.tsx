@@ -332,38 +332,38 @@ function QuestionScreen({
   const revealed = !!answer?.revealed;
 
   return (
-    <div className="space-y-5 animate-rise">
+    <div className="space-y-3 animate-rise pb-24">
       <ProgressBar value={(qid + 1) / QUESTIONS.length} qid={qid} />
       <MoneyLine total={total} />
       <AutoBubble>{q.autoIntro}</AutoBubble>
 
       <section>
-        <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-blue">
+        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue">
           {q.section}
         </div>
-        <h2 className="mt-1 text-xl sm:text-2xl font-extrabold leading-snug">
+        <h2 className="mt-0.5 text-base sm:text-lg font-extrabold leading-snug">
           {q.text}
         </h2>
 
-        <div className="mt-4 grid gap-2.5">
+        <div className="mt-2.5 grid gap-1.5">
           {q.opts.map((opt, i) => {
             const picked = answer?.optIdx === i;
             return (
               <button
                 key={i}
                 onClick={(e) => onPick(qid, i, e.currentTarget)}
-                className={`flex items-center gap-3 rounded-xl border p-4 text-left text-[15px] font-semibold transition active:scale-[0.99] ${
+                className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left text-[13px] font-semibold transition active:scale-[0.99] ${
                   picked
                     ? "border-blue bg-blue/10 text-ink"
                     : "border-line bg-card hover:border-blue/40 hover:bg-card/70 text-ink"
                 }`}
               >
                 <span
-                  className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${
+                  className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 ${
                     picked ? "border-blue bg-blue" : "border-line"
                   }`}
                 >
-                  {picked && <span className="h-2 w-2 rounded-full bg-bg" />}
+                  {picked && <span className="h-1.5 w-1.5 rounded-full bg-bg" />}
                 </span>
                 <span className="flex-1">{opt}</span>
               </button>
@@ -374,24 +374,27 @@ function QuestionScreen({
 
       {revealed && <Reveal q={q} />}
 
-      <div className="flex items-center justify-between gap-3 pt-2">
-        {onBack ? (
+      {/* Sticky CTA bar — keeps Next above the fold no matter the viewport. */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+          {onBack ? (
+            <button
+              onClick={onBack}
+              className="rounded-lg border border-line px-3 py-2.5 text-sm font-bold text-sub hover:text-ink"
+            >
+              ← Back
+            </button>
+          ) : (
+            <span />
+          )}
           <button
-            onClick={onBack}
-            className="rounded-xl border border-line px-4 py-3 text-sm font-bold text-sub hover:text-ink"
+            onClick={onNext}
+            disabled={!revealed}
+            className="rounded-lg bg-auto-grad px-5 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-blue/20 disabled:opacity-40 disabled:shadow-none"
           >
-            ← Back
+            {qid + 1 === QUESTIONS.length ? "See my score →" : "Next →"}
           </button>
-        ) : (
-          <span />
-        )}
-        <button
-          onClick={onNext}
-          disabled={!revealed}
-          className="rounded-xl bg-auto-grad px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-blue/20 disabled:opacity-40 disabled:shadow-none"
-        >
-          {qid + 1 === QUESTIONS.length ? "See my score →" : "Next →"}
-        </button>
+        </div>
       </div>
     </div>
   );
