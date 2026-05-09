@@ -18,6 +18,7 @@ export default function MoneyLine({ total }: Props) {
   const deltaTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
+    console.log("[MoneyLine] effect total=", total);
     // Cancel any in-flight animation; the new target supersedes it.
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     if (deltaTimerRef.current !== null)
