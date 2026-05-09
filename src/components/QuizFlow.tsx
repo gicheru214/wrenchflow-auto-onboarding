@@ -174,6 +174,11 @@ export default function QuizFlow() {
 
   function handoffToParent() {
     if (typeof window === "undefined") return;
+    trackFunnel("funnel_audit_handoff_clicked", {
+      session_id: getSessionId(),
+      revenue: total,
+      score,
+    });
     // Subpage mode: parent funnel passed `?return=…` when it redirected
     // here. Bounce back with score/revenue/sid so the popup re-opens at
     // the $1 offer step.
