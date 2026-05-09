@@ -752,9 +752,11 @@ function ScoreScreen({
           Hidden Money Score
         </div>
         <div className="mt-2 flex items-end justify-center gap-1 text-white">
-          <span className="text-7xl sm:text-8xl font-black leading-none tabular-nums">
-            {score}
-          </span>
+          <CountUp
+            to={score}
+            duration={1600}
+            className="text-7xl sm:text-8xl font-black leading-none tabular-nums"
+          />
           <span className="pb-3 text-2xl font-bold opacity-80">/ 100</span>
         </div>
         <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white">
@@ -764,28 +766,16 @@ function ScoreScreen({
           <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/80">
             Recoverable revenue · next 12 months
           </div>
-          <div className="mt-1 text-3xl sm:text-4xl font-black tabular-nums">
-            ${total.toLocaleString()}
-          </div>
+          <CountUp
+            to={total}
+            duration={1800}
+            prefix="$"
+            className="mt-1 block text-3xl sm:text-4xl font-black tabular-nums"
+          />
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {buckets.map((b) => (
-          <div
-            key={b.name}
-            className="rounded-2xl border border-line bg-card p-4"
-          >
-            <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-blue">
-              {b.name}
-            </div>
-            <div className="mt-1 text-2xl font-black text-money tabular-nums">
-              ${b.revenue.toLocaleString()}
-            </div>
-            <div className="mt-1 text-xs text-sub">recovered / yr</div>
-          </div>
-        ))}
-      </div>
+      <LeakBars buckets={buckets} />
 
       {embed ? (
         // Embed mode: parent popup owns the $1 conversion. Single
