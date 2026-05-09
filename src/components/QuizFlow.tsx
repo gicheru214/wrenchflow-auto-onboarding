@@ -34,6 +34,8 @@ export default function QuizFlow() {
   const embed = useMemo(() => isEmbedMode(), []);
   const [step, setStep] = useState<Step>(embed ? 0 : "intro");
   const [answers, setAnswers] = useState<Record<number, AnswerRecord>>({});
+  // Tracks which interstitial break screens (Q4, Q13) the user has dismissed.
+  const [seenBreaks, setSeenBreaks] = useState<Set<number>>(() => new Set());
   // Lead is captured upstream (popup → email gate). The quiz reads it; it never re-asks.
   const lead = useMemo<Contact>(() => getUpstreamLead(), []);
   const [submitting, setSubmitting] = useState(false);
