@@ -335,7 +335,12 @@ export default function QuizFlow() {
       <main className="mx-auto w-full max-w-2xl px-4 pt-5 sm:px-6">
         {step === "intro" && (
           <IntroScreen
-            onStart={() => go(0)}
+            onStart={() => {
+              trackFunnel("funnel_audit_started", {
+                session_id: getSessionId(),
+              });
+              go(0);
+            }}
             qCount={QUESTIONS.length}
           />
         )}
