@@ -258,6 +258,11 @@ export default function QuizFlow() {
   async function sendResultsByEmail() {
     if (emailSent) return;
     setEmailSent(true);
+    trackFunnel("funnel_audit_email_results_clicked", {
+      session_id: getSessionId(),
+      revenue: total,
+      score,
+    });
     await postSubmission({
       sessionId: getSessionId(),
       intent: "email_results" as unknown as "submit",
