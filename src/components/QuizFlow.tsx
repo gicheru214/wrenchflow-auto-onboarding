@@ -20,7 +20,12 @@ import Topbar from "./Topbar";
 import Toast, { ToastKind } from "./Toast";
 import { burstFrom } from "./MoneyParticles";
 
-type Step = "intro" | number | "paywall" | "score";
+type Step = "intro" | number | "paywall" | "calculating" | "score";
+
+// Questions that get an interstitial AutoBubble break screen *before*
+// they render. Picked at the section transitions where the user
+// has just finished a heavy block (after Q4 capacity, after Q13 cash flow).
+const INTERSTITIAL_BEFORE = new Set<number>([3, 12]);
 
 export default function QuizFlow() {
   // Embed mode = audit is being hosted inside the upstream popup iframe.
