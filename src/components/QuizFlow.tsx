@@ -866,3 +866,265 @@ function ScoreScreen({
     </div>
   );
 }
+
+// ---------- Interstitial (Q4 / Q13 break screens) ----------
+function Interstitial({
+  qid,
+  total,
+  onContinue,
+}: {
+  qid: number;
+  total: number;
+  onContinue: () => void;
+}) {
+  // Two break beats — one halfway through, one before the back half's
+  // money questions. Auto acknowledges what they've shared and gives
+  // them a breath before the next stretch.
+  const copy =
+    qid === 3
+      ? {
+          tag: "Halfway moment",
+          title: "Take a breath. You're 4 in.",
+          body: (
+            <>
+              I'm already seeing the shape of your shop's leak — and you've
+              barely told me anything. The next four are about{" "}
+              <strong className="text-blue">throughput and revenue</strong>.
+              That's where most of the recoverable money is hiding.
+            </>
+          ),
+          cta: "Keep going →",
+        }
+      : {
+          tag: "Last stretch",
+          title: "Five questions left. These are the tell.",
+          body: (
+            <>
+              You've already surfaced{" "}
+              <strong className="text-money">
+                ${total.toLocaleString()}
+              </strong>{" "}
+              of recoverable revenue. The next five are about{" "}
+              <strong className="text-blue">cash, pricing, and trust</strong>{" "}
+              — usually the biggest single jumps on the board.
+            </>
+          ),
+          cta: "Show me the rest →",
+        };
+
+  return (
+    <div className="space-y-4 animate-rise pb-24">
+      <div className="rounded-2xl border border-blue/30 bg-gradient-to-b from-[#0c1a2c] to-card p-5 sm:p-6 shadow-xl shadow-blue/10">
+        <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-blue">
+          {copy.tag}
+        </div>
+        <h2 className="mt-1 text-xl sm:text-2xl font-extrabold leading-tight">
+          {copy.title}
+        </h2>
+        <AutoBubble>
+          <p>{copy.body}</p>
+        </AutoBubble>
+        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+          <Stat
+            label="So far"
+            value={`Q${qid} / ${QUESTIONS.length}`}
+            tone="neutral"
+          />
+          <Stat
+            label="Money line"
+            value={`$${total.toLocaleString()}`}
+            tone="ok"
+          />
+          <Stat
+            label="Time left"
+            value={qid === 3 ? "~2 min" : "~1 min"}
+            tone="neutral"
+          />
+        </div>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-end gap-3 px-4 py-3 sm:px-6">
+          <button
+            onClick={onContinue}
+            className="rounded-lg bg-auto-grad px-5 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-blue/20"
+          >
+            {copy.cta}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone: "neutral" | "ok";
+}) {
+  return (
+    <div className="rounded-lg border border-line bg-card/70 px-2 py-2">
+      <div className="text-[9px] font-bold uppercase tracking-widest text-sub">
+        {label}
+      </div>
+      <div
+        className={`mt-0.5 text-sm font-black tabular-nums ${
+          tone === "ok" ? "text-money" : "text-ink"
+        }`}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+// ---------- Calculating screen (2.5s before score reveal) ----------
+function CalculatingScreen() {
+  const lines = [
+    "Reading your 18 answers…",
+    "Cross-checking industry benchmarks…",
+    "Tagging each leak by section…",
+    "Building your 90-day recovery plan…",
+  ];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(
+      () => setIdx((i) => (i + 1 >= lines.length ? i : i + 1)),
+      600,
+    );
+    return () => clearInterval(t);
+  }, [lines.length]);
+
+  return (
+    <div className="space-y-6 pt-6 sm:pt-12 animate-rise">
+      <div className="text-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-blue/30 bg-blue/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-blue">
+          🧮 Auto is calculating
+        </div>
+        <h1 className="mt-5 text-2xl sm:text-4xl font-black leading-[1.05] tracking-tight">
+          Calculating your hidden
+          <br />
+          <span className="bg-auto-grad bg-clip-text text-transparent">
+            money map…
+          </span>
+        </h1>
+      </div>
+
+      <div className="mx-auto grid w-full max-w-md place-items-center gap-5">
+        <div className="relative h-24 w-24">
+          <div className="absolute inset-0 rounded-full border-4 border-line" />
+          <div className="absolute inset-0 rounded-full border-4 border-blue border-t-transparent animate-spin" />
+          <div className="absolute inset-0 grid place-items-center text-2xl">
+            💰
+          </div>
+        </div>
+        <ul className="grid w-full gap-2">
+          {lines.map((l, i) => (
+            <li
+              key={i}
+              className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all ${
+                i <= idx
+                  ? "border-money/30 bg-money/5 text-ink"
+                  : "border-line bg-card/40 text-sub opacity-60"
+              }`}
+            >
+              <span
+                className={`grid h-4 w-4 place-items-center rounded-full text-[10px] font-bold ${
+                  i < idx
+                    ? "bg-money text-bg"
+                    : i === idx
+                      ? "bg-blue text-white animate-pulse"
+                      : "bg-line text-sub"
+                }`}
+              >
+                {i < idx ? "✓" : "•"}
+              </span>
+              <span className="flex-1">{l}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Count-up + LeakBars (used by ScoreScreen) ----------
+function CountUp({
+  to,
+  duration = 1400,
+  prefix = "",
+  className,
+}: {
+  to: number;
+  duration?: number;
+  prefix?: string;
+  className?: string;
+}) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const t0 = performance.now();
+    const tick = (t: number) => {
+      const k = Math.min(1, (t - t0) / duration);
+      const eased = 1 - Math.pow(1 - k, 3);
+      setV(Math.round(to * eased));
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [to, duration]);
+  return (
+    <span className={className}>
+      {prefix}
+      {v.toLocaleString()}
+    </span>
+  );
+}
+
+function LeakBars({
+  buckets,
+}: {
+  buckets: { name: string; revenue: number }[];
+}) {
+  const max = Math.max(1, ...buckets.map((b) => b.revenue));
+  const [drawn, setDrawn] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setDrawn(true), 200);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div className="rounded-2xl border border-line bg-card p-4 sm:p-5">
+      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-blue">
+        Where the money is hiding
+      </div>
+      <div className="mt-3 grid gap-3">
+        {buckets.map((b, i) => {
+          const pct = drawn ? Math.round((b.revenue / max) * 100) : 0;
+          return (
+            <div key={b.name}>
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="text-sm font-bold text-ink">{b.name}</span>
+                <span className="text-sm font-black tabular-nums text-money">
+                  $<CountUp to={b.revenue} duration={1400} />
+                </span>
+              </div>
+              <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-line">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-gold to-money"
+                  style={{
+                    width: `${pct}%`,
+                    transition: `width 1.1s cubic-bezier(0.22, 1, 0.36, 1) ${i * 180}ms`,
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
