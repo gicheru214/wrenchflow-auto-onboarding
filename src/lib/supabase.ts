@@ -52,17 +52,36 @@ export function getUpstreamLead(): {
 }
 
 /**
- * Embed mode flag — the audit is hosted standalone, but when iframed by
- * the upstream funnel popup we drop the intro screen, skip the built-in
- * paywall (parent owns the $1 conversion), and replace the score-reveal
- * CTAs with a single "Show me how to fix this" handoff button.
+ * Embed mode flag — the audit is hosted standalone, but when launched as
+ * a subpage by the upstream funnel popup we drop the intro screen, skip
+ * the built-in paywall (parent owns the $1 conversion), and replace the
+ * score-reveal CTAs with a single handoff button. Embed mode is on when
+ * either `?embed=1` (legacy iframe) or `?return=` (subpage redirect) is
+ * present.
  */
 export function isEmbedMode(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return new URLSearchParams(window.location.search).get("embed") === "1";
+    const p = new URLSearchParams(window.location.search);
+    return p.get("embed") === "1" || !!p.get("return");
   } catch {
     return false;
+  }
+}
+
+/**
+ * When the funnel popup redirects the whole window to the audit subpage,
+ * it passes its own URL via `?return=`. After the audit completes we send
+ * the user back there with `score`, `revenue`, and session id appended,
+ * so the popup re-opens at the $1 offer step. Returns null when the
+ * audit is iframed (postMessage handoff) or running standalone.
+ */
+export function getReturnUrl(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return new URLSearchParams(window.location.search).get("return");
+  } catch {
+    return null;
   }
 }
 
