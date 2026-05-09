@@ -26,24 +26,20 @@ export default function MoneyLine({ total }: Props) {
   }, [total]);
 
   return (
-    <div className="rounded-2xl border border-line bg-gradient-to-b from-[#0d2417] to-card p-4 sm:p-5">
+    <div className="rounded-xl border border-line bg-gradient-to-b from-[#0d2417] to-card px-3.5 py-2.5">
       <div className="flex items-baseline justify-between gap-3">
-        <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-money/80">
+        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-money/80">
           Money Line · Live
         </div>
-        <div className="text-3xl sm:text-4xl font-black text-money tabular-nums">
+        <div className="text-2xl sm:text-3xl font-black text-money tabular-nums">
           ${display.toLocaleString()}
         </div>
       </div>
-      <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-line">
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-line">
         <div
           className="h-full rounded-full bg-gradient-to-r from-gold to-money transition-all duration-700"
           style={{ width: `${Math.min(100, (display / 600000) * 100)}%` }}
         />
-      </div>
-      <div className="mt-2 text-xs text-sub">
-        Extra revenue Auto could be capturing for your shop this year, based on
-        your answers so far.
       </div>
     </div>
   );
