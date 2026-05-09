@@ -516,19 +516,39 @@ function Row({
 }
 
 function ProgressBar({ value, qid }: { value: number; qid: number }) {
+  // 18 individual tick segments. Each one fills the moment its
+  // question becomes the current step — gives a discrete, mile-marker
+  // sense of forward motion (Cal AI / Mobbin pattern).
   return (
     <div>
-      <div className="mb-1 flex justify-between text-[11px] uppercase tracking-[0.18em] text-sub">
+      <div className="mb-1.5 flex justify-between text-[11px] uppercase tracking-[0.18em] text-sub">
         <span>
           Question {qid + 1} of {QUESTIONS.length}
         </span>
         <span>{Math.round(value * 100)}%</span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-line">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-gold to-blue transition-all duration-500"
-          style={{ width: `${value * 100}%` }}
-        />
+      <div
+        className="flex w-full gap-[3px]"
+        role="progressbar"
+        aria-valuenow={qid + 1}
+        aria-valuemax={QUESTIONS.length}
+      >
+        {Array.from({ length: QUESTIONS.length }).map((_, i) => {
+          const filled = i <= qid;
+          const isCurrent = i === qid;
+          return (
+            <span
+              key={i}
+              className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                filled
+                  ? isCurrent
+                    ? "bg-gradient-to-r from-gold to-blue shadow-[0_0_10px_rgba(245,166,35,0.55)]"
+                    : "bg-blue/80"
+                  : "bg-line"
+              }`}
+            />
+          );
+        })}
       </div>
     </div>
   );
