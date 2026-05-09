@@ -88,6 +88,24 @@ export default function QuizFlow() {
 
   function handoffToParent() {
     if (typeof window === "undefined") return;
+    // Subpage mode: parent funnel passed `?return=…` when it redirected
+    // here. Bounce back with score/revenue/sid so the popup re-opens at
+    // the $1 offer step.
+    const returnUrl = getReturnUrl();
+    if (returnUrl) {
+      try {
+        const u = new URL(returnUrl);
+        u.searchParams.set("score", String(score));
+        u.searchParams.set("revenue", String(total));
+        u.searchParams.set("sid", getSessionId());
+        if (lead.email) u.searchParams.set("email", lead.email);
+        window.location.assign(u.toString());
+        return;
+      } catch {
+        /* malformed return URL — fall through to postMessage */
+      }
+    }
+    // Iframe fallback: the parent is listening for `wf-audit-done`.
     try {
       window.parent?.postMessage(
         {
