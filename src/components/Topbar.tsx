@@ -10,13 +10,13 @@ export default function Topbar({ stepLabel, stepCount }: Props) {
         <div className="flex items-center gap-3 min-w-0">
           <img
             src="/wrenchflow-logo.png"
-            alt="WrenchFlow"
+            alt="Gear Docket"
             className="h-9 w-9 rounded-xl ring-1 ring-line"
           />
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-base font-extrabold tracking-tight text-blue">
-                WrenchFlow
+                Gear Docket
               </span>
               <span className="rounded-md bg-gold/15 px-1.5 py-0.5 text-[10px] font-bold tracking-widest text-gold">
                 AUTO

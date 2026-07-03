@@ -24,7 +24,7 @@ export function getUpstreamLead(): {
   shop?: string;
 } {
   // 1. URL params win — that's how the parent funnel hands off across origins
-  //    (popup at wrenchflow.com → iframe at audit.subdomain). localStorage
+  //    (popup at geardocket.org → iframe at audit.subdomain). localStorage
   //    is per-origin so it can't carry the lead across, but query string can.
   if (typeof window !== "undefined") {
     try {

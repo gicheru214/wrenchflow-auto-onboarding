@@ -1,4 +1,4 @@
-// WrenchFlow Auto · quiz-submission Edge Function
+// Gear Docket Auto · quiz-submission Edge Function
 // POST /functions/v1/quiz-submission
 //   body: { sessionId, intent, contact, answers, revenue, score, durationMs, userAgent }
 // Inserts one row into public.quiz_submissions and returns { id }.

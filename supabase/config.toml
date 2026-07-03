@@ -1,4 +1,4 @@
-# Supabase project config for WrenchFlow Auto onboarding.
+# Supabase project config for Gear Docket Auto onboarding.
 # Run `supabase link` to bind this folder to your hosted project.
 
 project_id = "wrenchflow-auto-onboarding"

@@ -1,4 +1,4 @@
--- WrenchFlow Auto · paywall onboarding submissions
+-- Gear Docket Auto · paywall onboarding submissions
 -- One row per quiz submission. `intent` distinguishes the lifecycle stage:
 --   'submit'  → user unlocked their score (email captured)
 --   'connect' → user clicked "Connect my shop & build my plan" on the score screen
