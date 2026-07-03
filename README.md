@@ -1,8 +1,8 @@
-# WrenchFlow Auto · Paywall Onboarding
+# Gear Docket Auto · Paywall Onboarding
 
-10-question diagnostic quiz that funnels independent auto-shop owners into a paywalled "Shop Profit Score" reveal, then offers to connect their shop and build a 90-day plan with **Auto** (the WrenchFlow AI co-pilot).
+10-question diagnostic quiz that funnels independent auto-shop owners into a paywalled "Shop Profit Score" reveal, then offers to connect their shop and build a 90-day plan with **Auto** (the Gear Docket AI co-pilot).
 
-Lives at `wrenchflow.com/auto`. Mirrors the PestFlow Revenue Accelerator pattern — money-line ticker, particle bursts on selection, blurred score behind paywall, signature blue→cyan gradient on reveal.
+Lives at `geardocket.org/auto`. Mirrors the PestFlow Revenue Accelerator pattern — money-line ticker, particle bursts on selection, blurred score behind paywall, signature blue→cyan gradient on reveal.
 
 ## Repo layout
 
@@ -79,5 +79,5 @@ python3 -m http.server 7831      # serve index.html
 ## Roadmap
 
 - Wire the Cal-AI-style screen layout for the per-question reveal (separate task — pending after the question battery is final)
-- Pipe submissions into a Slack/email digest for the WrenchFlow founder
+- Pipe submissions into a Slack/email digest for the Gear Docket founder
 - Hook `intent: "connect"` rows to the Auto onboarding queue
